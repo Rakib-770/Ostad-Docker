@@ -1,16 +1,29 @@
-# Dockerfile-Server
-FROM node
+# Dockerfile-server
+FROM node:18-slim
 
+# Environment variables
 ENV MONGO_DB_USERNAME=ostad \
-    MONGO_DB_PASSWORD=ostad 
+    MONGO_DB_PASSWORD=ostad \
+    NODE_ENV=production
 
+# Set working directory
 WORKDIR /ostad-server
 
+# Copy only package files first (for better caching)
+COPY OstadServer/package*.json ./
+
+# Use a faster npm registry mirror (optional but helps a lot)
+RUN npm config set registry https://registry.npmmirror.com
+
+# Install dependencies quietly and efficiently
+RUN npm install --legacy-peer-deps --no-audit --no-fund
+
+# Copy the rest of the source code
 COPY OstadServer/ .
 
-
-RUN npm install
-
+# Expose port
 EXPOSE 5050
 
+# Start the server
 CMD ["node", "server.js"]
+

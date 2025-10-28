@@ -8,5 +8,10 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',  // Allow the server to listen on all interfaces
     port: 5173,       // Ensure it uses port 5173
+    allowedHosts: [
+      'ostad.local',  // Add your custom domain
+      'localhost',    // Keep localhost
+      '.localhost',   // Include subdomains of localhost
+    ]
   },
 })

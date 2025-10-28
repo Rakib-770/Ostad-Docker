@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostad-server
+  namespace: rakib-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ostad-server
+  template:
+    metadata:
+      labels:
+        app: ostad-server
+    spec:
+      containers:
+        - name: ostad-server
+          image: rakib770/ostad-server:latest
+          ports:
+            - containerPort: 5050
+          env:
+            - name: MONGO_URI
+              value: mongodb://ostad:ostad@mongo:27017/ostad
+            - name: MONGO_USERNAME
+              value: "ostad"
+            - name: MONGO_PASSWORD
+              value: "ostad"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ostad-server
+  namespace: rakib-ns
+spec:
+  selector:
+    app: ostad-server
+  ports:
+    - port: 5050
+      targetPort: 5050
+  type: ClusterIP
+
